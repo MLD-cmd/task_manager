@@ -136,14 +136,16 @@ jobs:
           ls -la android/app/keystore.jks
           file android/app/keystore.jks
       - name: Build release APK
-        run: |
-          flutter build apk --release \
-            --dart-define=ENV=production
         env:
           KEYSTORE_PATH: ${{ github.workspace }}/android/app/keystore.jks
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS_RAW: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD_RAW: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD_RAW: ${{ secrets.STORE_PASSWORD }}
+        run: |
+          export KEY_ALIAS="$(printf '%s' "$KEY_ALIAS_RAW" | tr -d '[:space:]')"
+          export KEY_PASSWORD="$(printf '%s' "$KEY_PASSWORD_RAW" | tr -d '\n\r')"
+          export STORE_PASSWORD="$(printf '%s' "$STORE_PASSWORD_RAW" | tr -d '\n\r')"
+          flutter build apk --release --dart-define=ENV=production
       - name: Upload release APK
         uses: actions/upload-artifact@v4
         with:
