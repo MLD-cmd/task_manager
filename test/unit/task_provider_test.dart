@@ -5,7 +5,7 @@ import 'package:task_manager/models/task.dart';
 import 'package:task_manager/services/task_service.dart';
 
 @GenerateMocks([TaskService])
-import 'unit_test.mocks.dart';
+import 'task_provider_test.mocks.dart';
 
 void main() {
   late TaskService taskService;
